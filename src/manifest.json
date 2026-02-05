@@ -37,8 +37,7 @@
             "matches": [
                 "*://twitter.com/*",
                 "*://x.com/*",
-                "*://discord.com/*",
-                "*://www.youtube.com/*"
+                "*://discord.com/*"
             ],
             "js": [
                 "src/content/index.ts"
