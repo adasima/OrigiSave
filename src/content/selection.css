@@ -1,0 +1,33 @@
+.twidis-selection-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999999;
+  cursor: crosshair;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 20px;
+  pointer-events: none;
+}
+
+.twidis-selection-header {
+  background: #1d9bf0;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-family: sans-serif;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+.twidis-selected-element {
+  outline: 4px solid #1d9bf0 !important;
+  outline-offset: 2px !important;
+  transition: outline 0.1s ease-in-out;
+}
