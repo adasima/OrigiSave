@@ -151,7 +151,7 @@ const injectActionBarButton = (tweetNode: HTMLElement) => {
                             username: username,
                             site: "twitter"
                         }
-                    }, "*");
+                    }, window.location.origin);
                     downloaded = true;
                 }
             } else if (media.type === "photo") {
@@ -167,7 +167,7 @@ const injectActionBarButton = (tweetNode: HTMLElement) => {
                         username: username,
                         site: "twitter"
                     }
-                }, "*");
+                }, window.location.origin);
                 downloaded = true;
             }
         });
