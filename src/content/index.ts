@@ -199,18 +199,25 @@ document.addEventListener("contextmenu", (e) => {
 // 2. Observe for Menu Creation (Specific to Discord)
 if (window.location.hostname.includes("discord")) {
     const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-            if (mutation.addedNodes.length) {
-                mutation.addedNodes.forEach((node) => {
-                    if (node instanceof HTMLElement) {
-                        const menu = node.getAttribute("role") === "menu" ? node : node.querySelector('[role="menu"]');
-                        if (menu) {
-                            if (lastRightClickUrl) {
-                                injectTwidisButton(menu as HTMLElement);
-                            }
-                        }
+        // Fast path: if no media URL was right-clicked, do nothing.
+        // This skips all processing for 99% of mutations.
+        if (!lastRightClickUrl) return;
+
+        for (let i = 0; i < mutations.length; i++) {
+            const addedNodes = mutations[i].addedNodes;
+            for (let j = 0; j < addedNodes.length; j++) {
+                const node = addedNodes[j];
+                // Fast element check (nodeType === 1 is Node.ELEMENT_NODE)
+                if (node.nodeType === 1) {
+                    const element = node as HTMLElement;
+                    const menu = element.getAttribute("role") === "menu"
+                        ? element
+                        : element.querySelector('[role="menu"]');
+
+                    if (menu) {
+                        injectTwidisButton(menu as HTMLElement);
                     }
-                });
+                }
             }
         }
     });
