@@ -1,5 +1,6 @@
 
 import { optimizeMediaUrl } from "../common/optimization";
+import type { MediaMetadata } from "../common/naming";
 
 console.log("OrigiSave Background Service Worker Initialized (Stable - No YouTube)");
 
@@ -13,18 +14,7 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-interface MediaMetadata {
-    site: string;
-    id: string;
-    url: string;
-    ext: string;
-    original_name: string;
-    timestamp: number;
-    username?: string;
-    author?: string;
-    tweet_id?: string;
-    title?: string;
-}
+
 
 // FORMAT FILENAME: HARDCODED LOGIC (YouTube removed)
 function generateFilename(meta: MediaMetadata): string {
