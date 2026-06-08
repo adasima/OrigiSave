@@ -1,25 +1,26 @@
-import { } from "react";
+
 import "./App.css";
 
 function App() {
-  return (
-    <div className="container">
-      <header className="header">
-        <h1 className="title">OrigiSave</h1>
-      </header>
-
-      <main className="main">
-        <div className="status-ready">
-          <span className="icon">✅</span>
-          READY
+    return (
+        <div className="popup-container">
+            <h1>OrigiSave</h1>
+            <p className="status">Background Service Active</p>
+            <div className="features">
+                <div className="feature">
+                    <span className="icon">🌐</span>
+                    <p>Right-click any media to save original</p>
+                </div>
+                <div className="feature">
+                    <span className="icon">✖️</span>
+                    <p>X (Twitter) Video & Images Support</p>
+                </div>
+            </div>
+            <div className="footer">
+                <small>Stable Version</small>
+            </div>
         </div>
-        <p className="description">
-          右クリックメニューからオリジナル画像を保存できます。
-        </p>
-      </main>
-    </div>
-  );
+    );
 }
 
 export default App;
-
