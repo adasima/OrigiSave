@@ -220,6 +220,7 @@ if (window.location.hostname.includes("discord")) {
 // 3. Listen for Messages from MAIN world (x-main.ts)
 window.addEventListener("message", (event) => {
     if (event.source !== window) return;
+    if (event.origin !== window.location.origin) return;
     if (event.data?.type === "ORIGISAVE_FW_DOWNLOAD") {
         console.log("[OrigiSave] Forwarding download from X Button:", event.data.url);
         chrome.runtime.sendMessage({
