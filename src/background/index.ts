@@ -73,6 +73,11 @@ async function handleDownload(url: string, tabUrl?: string, extraMeta: Partial<M
     const filename = generateFilename(meta);
     console.log("OrigiSave: Preparing download:", filename, "from", optimizedUrl);
 
+    if (!optimizedUrl.startsWith("http://") && !optimizedUrl.startsWith("https://")) {
+        console.error("OrigiSave: Blocked download with invalid URL scheme:", optimizedUrl);
+        return;
+    }
+
     // DIRECT DOWNLOAD (Standard API)
     chrome.downloads.download({
         url: optimizedUrl,
