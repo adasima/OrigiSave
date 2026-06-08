@@ -91,57 +91,11 @@ chrome.contextMenus.onClicked.addListener(async (info: chrome.contextMenus.OnCli
     }
 });
 
-// --- X (Twitter) Video Handling ---
-async function fetchTweetVideo(tweetId: string, tabUrl?: string) {
-    try {
-        console.log("Fetching video info for tweet:", tweetId);
-        const apiUrl = `https://cdn.syndication.twimg.com/tweet-result?id=${tweetId}&token=x`;
-
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error("Failed to fetch tweet info");
-
-        const data = await response.json();
-        const mediaList = data.mediaDetails || [];
-
-        const videoMedia = mediaList.find((m: any) => m.type === "video" || m.type === "animated_gif");
-
-        if (!videoMedia || !videoMedia.video_info || !videoMedia.video_info.variants) {
-            throw new Error("No video found in tweet");
-        }
-
-        const variants = videoMedia.video_info.variants;
-
-        const mp4s = variants
-            .filter((v: any) => v.content_type === "video/mp4")
-            .sort((a: any, b: any) => (b.bitrate || 0) - (a.bitrate || 0));
-
-        if (mp4s.length === 0) {
-            throw new Error("No MP4 source found");
-        }
-
-        const bestVideoUrl = mp4s[0].url;
-        const originalName = `twitter_${data.user?.screen_name || "user"}_${tweetId}`;
-
-        await handleDownload(bestVideoUrl, tabUrl, {
-            original_name: originalName,
-            username: data.user?.screen_name,
-            author: data.user?.screen_name,
-            tweet_id: tweetId,
-            site: "twitter",
-            ext: "mp4"
-        });
-
-    } catch (e) {
-        console.error("Error fetching tweet video:", e);
-    }
-}
 
 chrome.runtime.onMessage.addListener((message, sender) => {
     if (message.type === "DOWNLOAD_MEDIA" && message.url) {
         handleDownload(message.url, sender.tab?.url, message.meta);
     } else if (message.type === "SET_LAST_RIGHT_CLICK_TARGET") {
         lastRightClickUrl = message.url;
-    } else if (message.type === "DOWNLOAD_X_VIDEO" && message.tweetId) {
-        fetchTweetVideo(message.tweetId, sender.tab?.url);
     }
 });
