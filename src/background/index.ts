@@ -1,5 +1,6 @@
 
 import { optimizeMediaUrl } from "../common/optimization";
+import type { MediaMetadata } from "../common/naming";
 
 console.log("OrigiSave Background Service Worker Initialized (Stable - No YouTube)");
 
@@ -13,18 +14,7 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-interface MediaMetadata {
-    site: string;
-    id: string;
-    url: string;
-    ext: string;
-    original_name: string;
-    timestamp: number;
-    username?: string;
-    author?: string;
-    tweet_id?: string;
-    title?: string;
-}
+
 
 // FORMAT FILENAME: HARDCODED LOGIC (YouTube removed)
 function generateFilename(meta: MediaMetadata): string {
@@ -103,7 +93,7 @@ async function fetchTweetVideo(tweetId: string, tabUrl?: string) {
         const data = await response.json();
         const mediaList = data.mediaDetails || [];
 
-        const videoMedia = mediaList.find((m: any) => m.type === "video" || m.type === "animated_gif");
+        const videoMedia = mediaList.find((m: any) => m.type === "video" || m.type === "animated_gif"); // eslint-disable-line @typescript-eslint/no-explicit-any
 
         if (!videoMedia || !videoMedia.video_info || !videoMedia.video_info.variants) {
             throw new Error("No video found in tweet");
@@ -112,8 +102,8 @@ async function fetchTweetVideo(tweetId: string, tabUrl?: string) {
         const variants = videoMedia.video_info.variants;
 
         const mp4s = variants
-            .filter((v: any) => v.content_type === "video/mp4")
-            .sort((a: any, b: any) => (b.bitrate || 0) - (a.bitrate || 0));
+            .filter((v: any) => v.content_type === "video/mp4") // eslint-disable-line @typescript-eslint/no-explicit-any
+            .sort((a: any, b: any) => (b.bitrate || 0) - (a.bitrate || 0)); // eslint-disable-line @typescript-eslint/no-explicit-any
 
         if (mp4s.length === 0) {
             throw new Error("No MP4 source found");
