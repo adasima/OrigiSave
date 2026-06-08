@@ -48,15 +48,26 @@ const injectActionBarButton = (tweetNode: HTMLElement) => {
     btn.className = "origisave-download-button";
     btn.setAttribute("role", "button");
     btn.setAttribute("tabindex", "0");
-    btn.innerHTML = `
-        <div dir="ltr" class="css-1rynq56 r-bcqeeo r-qvutc0 r-37j5jr r-a2tzq0 r-qjnra3" style="color: rgb(113, 118, 123);">
-            <div class="css-175oi2r r-xoduu5 r-1udh08x">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1xvli5t r-1hdv0qi">
-                    <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/>
-                </svg>
-            </div>
-        </div>
-    `;
+    const div1 = document.createElement("div");
+    div1.setAttribute("dir", "ltr");
+    div1.className = "css-1rynq56 r-bcqeeo r-qvutc0 r-37j5jr r-a2tzq0 r-qjnra3";
+    div1.style.color = "rgb(113, 118, 123)";
+
+    const div2 = document.createElement("div");
+    div2.className = "css-175oi2r r-xoduu5 r-1udh08x";
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("class", "r-4qtqp9 r-yyyyoo r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1xvli5t r-1hdv0qi");
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", "M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z");
+
+    svg.appendChild(path);
+    div2.appendChild(svg);
+    div1.appendChild(div2);
+    btn.appendChild(div1);
     btn.title = "Save Media (OrigiSave)";
 
     // Style to match Action Bar items (approximately)
