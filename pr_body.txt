@@ -1,0 +1,14 @@
+🎯 **What:** The testing gap addressed
+Added tests to verify `optimizeMediaUrl` handles invalid URLs gracefully by ensuring it enters the `catch` block and returns the expected result.
+
+📊 **Coverage:** What scenarios are now tested
+- Modern X (Twitter) URL styles (`?format=...`)
+- Legacy X URL styles (`:large`)
+- Standard X URL styles
+- Discord media URLs
+- Discord CDN URLs
+- Invalid URLs (Testing the catch block)
+- Normal unoptimized URLs
+
+✨ **Result:** The improvement in test coverage
+Introduced vitest framework to the application, creating a full testing harness. Tests ensure regressions won't occur during URL parsing optimizations, bringing coverage for the targeted utility from 0% to nearly 100%.
