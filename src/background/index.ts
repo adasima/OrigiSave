@@ -13,7 +13,7 @@ chrome.runtime.onInstalled.addListener(() => {
     });
 });
 
-interface MediaMetadata {
+export interface MediaMetadata {
     site: string;
     id: string;
     url: string;
@@ -27,7 +27,7 @@ interface MediaMetadata {
 }
 
 // FORMAT FILENAME: HARDCODED LOGIC (YouTube removed)
-function generateFilename(meta: MediaMetadata): string {
+export function generateFilename(meta: MediaMetadata): string {
     const cleanName = (meta.original_name || "unknown").replace(/[\\/:*?"<>|]/g, "_");
 
     // Discord -> Original Name
