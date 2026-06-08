@@ -185,13 +185,18 @@ const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
             if (node instanceof HTMLElement) {
-                // Check if it's a tweet article
+                // Check if it's a tweet article itself
                 if (node.tagName === "ARTICLE" && node.getAttribute("data-testid") === "tweet") {
                     injectActionBarButton(node);
                 }
-                // Or if it contains tweets
-                const tweets = node.querySelectorAll("article[data-testid='tweet']");
-                tweets.forEach(t => injectActionBarButton(t as HTMLElement));
+
+                // Also check for nested tweet articles
+                const articles = node.getElementsByTagName("article");
+                for (let i = 0; i < articles.length; i++) {
+                    if (articles[i].getAttribute("data-testid") === "tweet") {
+                        injectActionBarButton(articles[i] as HTMLElement);
+                    }
+                }
             }
         }
     }
