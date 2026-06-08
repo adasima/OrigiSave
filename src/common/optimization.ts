@@ -29,7 +29,7 @@ export function optimizeMediaUrl(url: string): OptimizedMedia {
 
             // Handle colon style (legacy/different X style)
             if (urlObj.pathname.includes(":")) {
-                const [basePath, _name] = urlObj.pathname.split(":");
+                const [basePath] = urlObj.pathname.split(":");
                 urlObj.pathname = `${basePath}:orig`;
                 const ext = basePath.split(".").pop();
                 return { url: urlObj.toString(), originalName, ext };
@@ -58,7 +58,7 @@ export function optimizeMediaUrl(url: string): OptimizedMedia {
 
 
         return { url };
-    } catch (e) {
+    } catch {
         return { url };
     }
 }

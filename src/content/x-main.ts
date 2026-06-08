@@ -4,13 +4,13 @@
 console.log("OrigiSave X Main World Script Loaded");
 
 // Helper to find the React internal instance key
-const getReactFiber = (el: HTMLElement): any => {
+const getReactFiber = (el: HTMLElement): any => { // eslint-disable-line @typescript-eslint/no-explicit-any
     const key = Object.keys(el).find(k => k.startsWith("__reactFiber$"));
-    return key ? (el as any)[key] : null;
+    return key ? (el as any)[key] : null; // eslint-disable-line @typescript-eslint/no-explicit-any
 };
 
 // Traverse Fiber to find specific props (like 'tweet')
-const findTweetDataInFiber = (fiber: any): any => {
+const findTweetDataInFiber = (fiber: any): any => { // eslint-disable-line @typescript-eslint/no-explicit-any
     let curr = fiber;
     // Limit depth to avoid performance hit
     let depth = 0;
@@ -48,15 +48,26 @@ const injectActionBarButton = (tweetNode: HTMLElement) => {
     btn.className = "origisave-download-button";
     btn.setAttribute("role", "button");
     btn.setAttribute("tabindex", "0");
-    btn.innerHTML = `
-        <div dir="ltr" class="css-1rynq56 r-bcqeeo r-qvutc0 r-37j5jr r-a2tzq0 r-qjnra3" style="color: rgb(113, 118, 123);">
-            <div class="css-175oi2r r-xoduu5 r-1udh08x">
-                <svg viewBox="0 0 24 24" aria-hidden="true" class="r-4qtqp9 r-yyyyoo r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1xvli5t r-1hdv0qi">
-                    <path d="M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z"/>
-                </svg>
-            </div>
-        </div>
-    `;
+    const outerDiv = document.createElement("div");
+    outerDiv.dir = "ltr";
+    outerDiv.className = "css-1rynq56 r-bcqeeo r-qvutc0 r-37j5jr r-a2tzq0 r-qjnra3";
+    outerDiv.style.color = "rgb(113, 118, 123)";
+
+    const innerDiv = document.createElement("div");
+    innerDiv.className = "css-175oi2r r-xoduu5 r-1udh08x";
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("class", "r-4qtqp9 r-yyyyoo r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1xvli5t r-1hdv0qi");
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", "M12 16l-5-5h3V4h4v7h3l-5 5zm-7 2h14v2H5v-2z");
+
+    svg.appendChild(path);
+    innerDiv.appendChild(svg);
+    outerDiv.appendChild(innerDiv);
+    btn.appendChild(outerDiv);
     btn.title = "Save Media (OrigiSave)";
 
     // Style to match Action Bar items (approximately)
@@ -76,12 +87,12 @@ const injectActionBarButton = (tweetNode: HTMLElement) => {
     btn.addEventListener("mouseenter", () => {
         btn.style.backgroundColor = "rgba(29, 155, 240, 0.1)";
         const icon = btn.querySelector("svg");
-        if (icon) icon.style.color = "rgb(29, 155, 240)";
+        if (icon) (icon as HTMLElement | SVGSVGElement).style.color = "rgb(29, 155, 240)";
     });
     btn.addEventListener("mouseleave", () => {
         btn.style.backgroundColor = "transparent";
         const icon = btn.querySelector("svg");
-        if (icon) icon.style.color = ""; // inherit
+        if (icon) (icon as HTMLElement | SVGSVGElement).style.color = ""; // inherit
     });
 
     btn.addEventListener("click", (e) => {
@@ -133,12 +144,12 @@ const injectActionBarButton = (tweetNode: HTMLElement) => {
 
         let downloaded = false;
 
-        mediaList.forEach((media: any) => {
+        mediaList.forEach((media: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
             if (media.type === "video" || media.type === "animated_gif") {
                 const variants = media.video_info?.variants || [];
                 const mp4s = variants
-                    .filter((v: any) => v.content_type === "video/mp4")
-                    .sort((a: any, b: any) => (b.bitrate || 0) - (a.bitrate || 0));
+                    .filter((v: any) => v.content_type === "video/mp4") // eslint-disable-line @typescript-eslint/no-explicit-any
+                    .sort((a: any, b: any) => (b.bitrate || 0) - (a.bitrate || 0)); // eslint-disable-line @typescript-eslint/no-explicit-any
 
                 if (mp4s.length > 0) {
                     const bestUrl = mp4s[0].url;
@@ -185,13 +196,18 @@ const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
             if (node instanceof HTMLElement) {
-                // Check if it's a tweet article
+                // Check if it's a tweet article itself
                 if (node.tagName === "ARTICLE" && node.getAttribute("data-testid") === "tweet") {
                     injectActionBarButton(node);
                 }
-                // Or if it contains tweets
-                const tweets = node.querySelectorAll("article[data-testid='tweet']");
-                tweets.forEach(t => injectActionBarButton(t as HTMLElement));
+
+                // Also check for nested tweet articles
+                const articles = node.getElementsByTagName("article");
+                for (let i = 0; i < articles.length; i++) {
+                    if (articles[i].getAttribute("data-testid") === "tweet") {
+                        injectActionBarButton(articles[i] as HTMLElement);
+                    }
+                }
             }
         }
     }
